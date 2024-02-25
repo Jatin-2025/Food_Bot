@@ -1,0 +1,5 @@
+mappings:
+  axes:
+    - axes[1]  # Only using axis 1
+  buttons:
+    - buttons[1]  # Using button 1 for both forward and backward
