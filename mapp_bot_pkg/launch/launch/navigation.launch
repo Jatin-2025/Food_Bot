@@ -1,0 +1,35 @@
+<launch>
+
+	<arg name="custom_amcl_launch_file" default="$(find navigation_stack)/launch/amcl.launch"/>
+
+
+	<!-- <include file="$(find atom)/launch/house.launch"/> -->
+
+	<include file="$(arg custom_amcl_launch_file)">
+		<arg name="base_link_name" value="chassis"/>
+		<arg name="map_file" value="$(find mapp_bot_pkg)/../maps/my_map.yaml"/>
+	</include>
+
+	<include file="$(find navigation_stack)/launch/includes/move_base.launch.xml">
+		<arg name="base_frame_id" value="chassis"/>
+		<arg name="odom_topic" value="atom/odom" />
+		<arg name="odom_frame_id" value="odom"/>
+		<arg name="cmd_vel_topic" value="atom/cmd_vel" />
+		<arg name="custom_param_file" value="$(find navigation_stack)/param/r200_costmap_params.yaml"/>
+	</include>
+
+	<node name="rviz" pkg="rviz" type="rviz" respawn="false"
+			args="-d $(find navigation_stack)/rviz/navigation.rviz"/>
+
+	<!-- Start RPLIDAR sensor node which provides LaserScan data  -->
+    <node name="rplidarNode"          pkg="rplidar_ros"  type="rplidarNode" output="screen">
+		<param name="serial_port"         type="string" value="/dev/ttyUSB0"/>
+		<param name="serial_baudrate"     type="int"    value="256000"/>
+		<param name="frame_id"            type="string" value="laser"/>
+		<param name="inverted"            type="bool"   value="false"/>
+		<param name="angle_compensate"    type="bool"   value="true"/>
+		<param name="scan_frequency" type="double" value="16"/>
+   
+	</node>
+
+</launch>
